@@ -1,11 +1,15 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
 import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUser, setUser } from 'redux/slices/userSlice';
 
 export default function Home() {
   const [activeNav, setActiveNav] = useState('')
   const router = useRouter();
   const path = router.pathname;
+  const dispatch = useDispatch();
+  const user = useSelector(getUser);
 
   console.log(path, 'router')
   console.log(activeNav, 'active')
@@ -55,7 +59,7 @@ export default function Home() {
             <img className="object-cover" src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="" />
           </div>
         </div>
-        <div className="text-white font-semibold text-2xl py-2">Arne</div>
+        <div className="text-white font-semibold text-2xl py-2">{user.username}</div>
         <div className="flex flex-row w-full justify-center items-center">
           <button className="flex justify-center items-center w-auto h-6 p-2 m-2 rounded-full text-center bg-white bg-opacity-25 text-white font-semibold text-sm">
             20 years
