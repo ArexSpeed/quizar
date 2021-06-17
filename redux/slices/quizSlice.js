@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   categories: ['Maths', 'Programming'],
+  selectedCategory: null,
   activeQuestion: 0,
   questions: [
     {
@@ -70,28 +71,42 @@ const initialState = {
         { valid: false, checked: false, content: "1999"},
       ]
     },
-  ]
+  ],
+  selectedQuestions: []
 }
 
 export const slice = createSlice({
   name: 'quiz',
   initialState,
   reducers: {
+    selectCategory: (state, action) => {
+      state.selectedCategory = action.payload;
+    },
     next: state => {
       state.activeQuestion += 1;
     },
     prev: state => {
       state.activeQuestion -= 1;
     },
+    filterQuestions: (state, action) => {
+      console.log('filter question', action)
+      state.selectedQuestions = state.questions.filter(question => question.category === action.payload);
+    }
   }
 });
 
 export const {
+  selectCategory,
   start,
   next,
+  prev,
+  filterQuestions,
 } = slice.actions;
 
-export const selectQuizCategories = state => state.quiz.categories;
-export const selectQuizQuestions = state => state.quiz.questions;
+export const getQuizCategories = state => state.quiz.categories;
+export const getQuizQuestions = state => state.quiz.questions;
+export const getActiveQuestionNumber = state => state.quiz.activeQuestion;
+export const getCurrentCategory = state => state.quiz.selectedCategory;
+export const getSelectedQuestions = state => state.quiz.selectedQuestions;
 
 export default slice.reducer;

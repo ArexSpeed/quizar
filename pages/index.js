@@ -1,9 +1,10 @@
 import Head from 'next/head'
 import { useRouter } from 'next/router'
+import Link from 'next/link';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUser, setUser } from 'redux/slices/userSlice';
-import { selectQuizCategories } from 'redux/slices/quizSlice';
+import { getUser } from 'redux/slices/userSlice';
+import { selectCategory, filterQuestions, getQuizCategories } from 'redux/slices/quizSlice';
 
 export default function Home() {
   const [activeNav, setActiveNav] = useState('')
@@ -11,7 +12,7 @@ export default function Home() {
   const path = router.pathname;
   const dispatch = useDispatch();
   const user = useSelector(getUser);
-  const categories = useSelector(selectQuizCategories);
+  const categories = useSelector(getQuizCategories);
 
   console.log(categories,'categories');
   // console.log(path, 'router')
@@ -117,9 +118,11 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="px-2 mx-2">
-              <svg className="w-6 h-6 opacity-40" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
-            </div>
+            <Link href={`/quiz`}>
+              <button onClick={() => dispatch(filterQuestions(category))} className="px-2 mx-2 focus:outline-none">
+                <svg className="w-6 h-6 opacity-40" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clipRule="evenodd" /></svg>
+              </button>
+            </Link>
           </div>
           ))}
         </section>
