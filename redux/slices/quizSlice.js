@@ -89,6 +89,11 @@ export const slice = createSlice({
     prev: state => {
       state.activeQuestion -= 1;
     },
+    reset: state => {
+      state.selectedCategory = null;
+      state.activeQuestion = 0;
+      state.result = 0;
+    },
     toggleAnswer: (state, action) => {
       console.log(action, 'toogle')
       const answer = action.payload;
@@ -97,6 +102,7 @@ export const slice = createSlice({
     },
     filterQuestions: (state, action) => {
       state.selectedQuestions = state.questions.filter(question => question.category === action.payload);
+      state.selectedCategory = action.payload;
     },
     finish: state => {
       let points = 0;
@@ -116,6 +122,7 @@ export const {
   start,
   next,
   prev,
+  reset,
   toggleAnswer,
   filterQuestions,
   finish

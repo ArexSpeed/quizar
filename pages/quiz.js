@@ -1,7 +1,10 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
-import { next, finish, getSelectedQuestions, getActiveQuestionNumber } from 'redux/slices/quizSlice';
+import { next, reset, finish, getSelectedQuestions, getActiveQuestionNumber, getCurrentCategory, selectCategory } from 'redux/slices/quizSlice';
+import styled, { keyframes } from "styled-components";
+import CountUp from 'react-countup';
+import Confetti from 'react-confetti'
 
 const QuizPage = () => {
   const [answer, setAnswer] = useState({variant: '', correct: false});
@@ -9,6 +12,7 @@ const QuizPage = () => {
   const [summary, setSummary] = useState(false);
   const questions = useSelector(getSelectedQuestions);
   const questionNumber = useSelector(getActiveQuestionNumber);
+  const category = useSelector(getCurrentCategory);
   const dispatch = useDispatch();
 
   const nextQuestion = () => {
@@ -29,15 +33,43 @@ const QuizPage = () => {
     }
   }
 
+  const handleReset = () => {
+    dispatch(reset());
+    setAnswer({
+      variant: '',
+      correct: false
+    });
+    setPoints(0);
+    setSummary(false);
+  }
+
+  // Style for animation range in result
+  const range = keyframes`
+    from {
+      width: 0%;
+    }
+    to {
+      width: ${Math.ceil((points/questions.length)*100)}%;
+    }
+  `;
+
+  const Range = styled.div`
+    width: 0%;
+    animation: ${range} 2s linear forwards;
+  `;
+
   return (
-    <div className="relative flex flex-col items-center justify-start h-screen w-full mx-auto md:max-w-screen-md p-2 bg-gray-100 overflow-y-auto"> 
+    <div className="relative flex flex-col items-center justify-start h-screen w-full mx-auto md:max-w-screen-md p-2 bg-gray-100 overflow-x-hidden overflow-y-auto"> 
       {!summary ? (
       <>
         <section className="flex flex-row justify-start items-center w-full h-4 my-4 p-4">
           <Link href="/">
-            <div className="px-2 mr-2 w-8 h-8 rounded-full flex justify-center items-center bg-blue-200">
+            <button 
+              className="px-2 mr-2 w-8 h-8 rounded-full flex justify-center items-center bg-blue-200 focus:outline-none"
+              onClick={handleReset} 
+            >
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
-            </div>
+            </button>
           </Link>
           <div className="flex flex-row justify-center items-center w-full h-4 my-4 p-4 rounded-full bg-white shadow-sm">
             <div className="relative pt-1 w-full">
@@ -123,18 +155,36 @@ const QuizPage = () => {
       )
     :
     (
-      <>
-        <div>Finished</div>
-        <section>Your result {points} points</section>
-        <button 
-          className="flex justify-center items-center h-16 w-32 px-6 my-6 text-white text-xl font-bold bg-gradient-to-r from-blue-400 to-red-500 rounded-md"
-        >
-          Back
-        </button>
-      </>
+      <div className="flex flex-col justify-between items-center w-full h-screen overflow-hidden">
+        <Confetti />
+        <h2 className="text-xl font-semibold">Finished !!</h2>
+        <section className="flex flex-col w-full text-center my-6 px-4 mx-auto">
+          <h3 className="font-semibold text-xl my-4">
+            Category: {category}
+          </h3>
+          <h2 className="font-semibold text-2xl">
+            Your result <CountUp end={Math.ceil((points/questions.length)*100)} duration={2} />%
+          </h2>
+          <div className="relative w-full my-4 p-4">
+            <div className="overflow-hidden w-full h-4 text-xs flex rounded-full bg-blue-200">
+              <Range className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-400" />
+            </div>
+          </div>
+        </section>
+        <Link href="/">
+          <button 
+            className="flex justify-center items-center h-16 w-32 px-6 my-6 text-white text-xl font-bold bg-gradient-to-r from-blue-400 to-red-500 rounded-md"
+            onClick={handleReset}
+          >
+            Finish
+          </button>
+        </Link>
+      </div>
     )}
     </div>
   )
 }
 
 export default QuizPage;
+
+//style={{ width: `${Math.ceil((points/questions.length)*100)}%` }}
