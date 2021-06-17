@@ -4,6 +4,7 @@ const initialState = {
   categories: ['Maths', 'Programming'],
   selectedCategory: null,
   activeQuestion: 0,
+  result: 0,
   questions: [
     {
       id: 1,
@@ -22,7 +23,7 @@ const initialState = {
       content: '2+20 = ',
       answers: [
         { valid: false, checked: false, content: "3" },
-        { valid: true, checked: false, content: "40"},
+        { valid: true, checked: false, content: "22"},
         { valid: false, checked: false, content: "4"},
         { valid: false, checked: false, content: "5"},
       ]
@@ -88,10 +89,25 @@ export const slice = createSlice({
     prev: state => {
       state.activeQuestion -= 1;
     },
+    toggleAnswer: (state, action) => {
+      console.log(action, 'toogle')
+      const answer = action.payload;
+      const question = state.questions[state.activeQuestion]
+      question.answers[answer].checked = !question.answers[answer].checked
+    },
     filterQuestions: (state, action) => {
-      console.log('filter question', action)
       state.selectedQuestions = state.questions.filter(question => question.category === action.payload);
-    }
+    },
+    finish: state => {
+      let points = 0;
+
+      state.questions.forEach(q => {
+        points += q.answers.filter(a => a.checked === true && a.valid === true).length
+      })
+
+      state.result = points;
+      
+    },
   }
 });
 
@@ -100,7 +116,9 @@ export const {
   start,
   next,
   prev,
+  toggleAnswer,
   filterQuestions,
+  finish
 } = slice.actions;
 
 export const getQuizCategories = state => state.quiz.categories;
