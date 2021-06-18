@@ -43,6 +43,16 @@ const QuizPage = () => {
     setSummary(false);
   }
 
+  const handleFinish = () => {
+    const result = Math.ceil((points/questions.length)*100);
+    dispatch(finish({
+      name: category, 
+      result
+    }))
+
+    handleReset();
+  }
+
   // Style for animation range in result
   const range = keyframes`
     from {
@@ -174,7 +184,7 @@ const QuizPage = () => {
         <Link href="/">
           <button 
             className="flex justify-center items-center h-16 w-32 px-6 my-6 text-white text-xl font-bold bg-gradient-to-r from-blue-400 to-red-500 rounded-md"
-            onClick={handleReset}
+            onClick={handleFinish}
           >
             Finish
           </button>

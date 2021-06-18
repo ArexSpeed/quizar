@@ -1,7 +1,26 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  categories: ['Maths', 'Programming'],
+  categories: [
+    {
+      id: 1,
+      name: 'Maths',
+      finished: false,
+      result: 0
+    },
+    {
+      id: 2,
+      name: 'Programming',
+      finished: false,
+      result: 0
+    },
+    {
+      id: 3,
+      name: 'Geography',
+      finished: false,
+      result: 0
+    },
+  ],
   selectedCategory: null,
   activeQuestion: 0,
   result: 0,
@@ -72,6 +91,61 @@ const initialState = {
         { valid: false, checked: false, content: "1999"},
       ]
     },
+    {
+      id: 7,
+      category: 'Geography',
+      content: 'The biggest country in the World> ',
+      answers: [
+        { valid: false, checked: false, content: "USA" },
+        { valid: false, checked: false, content: "Canada"},
+        { valid: true, checked: false, content: "Russia"},
+        { valid: false, checked: false, content: "China"},
+      ]
+    },
+    {
+      id: 8,
+      category: 'Geography',
+      content: 'What is the capital of US? ',
+      answers: [
+        { valid: false, checked: false, content: "New York" },
+        { valid: true, checked: false, content: "Washington"},
+        { valid: false, checked: false, content: "LA"},
+        { valid: false, checked: false, content: "Chicago"},
+      ]
+    },
+    {
+      id: 9,
+      category: 'Geography',
+      content: 'How many states has USA ',
+      answers: [
+        { valid: true, checked: false, content: "50" },
+        { valid: false, checked: false, content: "60"},
+        { valid: false, checked: false, content: "40"},
+        { valid: false, checked: false, content: "30"},
+      ]
+    },
+    {
+      id: 10,
+      category: 'Geography',
+      content: 'What is capital of England ',
+      answers: [
+        { valid: true, checked: false, content: "London" },
+        { valid: false, checked: false, content: "Liverpool"},
+        { valid: false, checked: false, content: "Manchester"},
+        { valid: false, checked: false, content: "Leeds"},
+      ]
+    },
+    {
+      id: 11,
+      category: 'Geography',
+      content: 'How many desserts are in Europe ',
+      answers: [
+        { valid: true, checked: false, content: "1" },
+        { valid: false, checked: false, content: "0"},
+        { valid: false, checked: false, content: "10"},
+        { valid: false, checked: false, content: "30"},
+      ]
+    },
   ],
   selectedQuestions: []
 }
@@ -104,15 +178,16 @@ export const slice = createSlice({
       state.selectedQuestions = state.questions.filter(question => question.category === action.payload);
       state.selectedCategory = action.payload;
     },
-    finish: state => {
-      let points = 0;
-
-      state.questions.forEach(q => {
-        points += q.answers.filter(a => a.checked === true && a.valid === true).length
+    finish: (state, action) => {
+      console.log(action.payload);
+      const categoryName = action.payload.name;
+      const result = action.payload.result;
+      state.categories.map(category => {
+        if(category.name === categoryName) {
+          category.result = result;
+          category.finished = true;
+        }
       })
-
-      state.result = points;
-      
     },
   }
 });
