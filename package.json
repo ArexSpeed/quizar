@@ -9,6 +9,8 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.6.0",
+    "mongodb": "^3.6.9",
+    "mongoose": "^5.12.14",
     "next": "latest",
     "react": "^17.0.1",
     "react-confetti": "^6.0.1",
