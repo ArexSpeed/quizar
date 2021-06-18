@@ -5,6 +5,26 @@ import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from 'redux/slices/userSlice';
 import { selectCategory, filterQuestions, getQuizCategories } from 'redux/slices/quizSlice';
+//import { connectToDatabase } from '../util/mongodb'
+
+// export async function getServerSideProps(context) {
+//   const { db } = await connectToDatabase()
+//   const data = await db.collection("questions").find().sort({_id: 1}).toArray();
+//   const isConnected = await client.isConnected()
+//   //console.log(data, 'data');
+//   const questions = data.map(q => {
+//     const qd = JSON.parse(JSON.stringify(q._id));
+//     return {
+//       id: qId,
+//       category: q.category,
+//       content: q.content,
+//       answers: q.answers
+//     }
+//   })
+//   return {
+//     props: { questions },
+//   }
+// }
 
 export default function Home() {
   const [activeNav, setActiveNav] = useState('')
