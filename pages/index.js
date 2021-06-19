@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from 'redux/slices/userSlice';
-import { getQuizCategoriesApi, filterQuestions, getQuizCategories, fetchQuestions, getQuestionsFromApi } from 'redux/slices/quizSlice';
+import { getQuizCategoriesApi, filterQuestions, getQuizCategories, getUserResults, fetchQuestions, getQuestionsFromApi, fetchUserResults } from 'redux/slices/quizSlice';
 import axios from 'axios';
 
 export default function Home() {
@@ -16,16 +16,25 @@ export default function Home() {
   const user = useSelector(getUser);
   const categories = useSelector(getQuizCategories);
   const categoriesApi = useSelector(getQuizCategoriesApi);
+  const userResults = useSelector(getUserResults);
+  const [resultNumber, setResultNumber] = useState(0);
+  //const [resultat, setResultat] = useState([]);
 
   useEffect(() => {
     setFinishedQuiz(0);
     categories.filter(category => category.finished && setFinishedQuiz(finishedQuiz+1));
   }, [categories])
 
+  useEffect(async () => {
+    const data = await axios.get(`http://localhost:3000/api/results?user=Tanja`)
+    dispatch(fetchUserResults(data));
+  }, [])
+
   const chooseQuiz = async (category) => {
     const data = await axios.get(`http://localhost:3000/api/questions?category=${category}`)
     dispatch(getQuestionsFromApi(data));
   }
+  console.log(userResults, 'result');
 
   // console.log(path, 'router')
   // console.log(activeNav, 'active')
@@ -134,7 +143,10 @@ export default function Home() {
             </div>
             <div className="flex flex-col flex-1 justify-start items-start">
               <h4 className="font-semibold text-md">{category.name}</h4>
-              <h6 className="text-xs text-black text-opacity-50">10% result</h6>
+              <h6 className="text-xs text-black text-opacity-50">
+                {userResults[0]?.filter(result => result.category === category && setResultNumber(result))} 
+                {resultNumber} % result
+              </h6>
               <div className="relative pt-1 w-full">
                 <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-green-200">
                   <div style={{ width: `10%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-green-400"></div>

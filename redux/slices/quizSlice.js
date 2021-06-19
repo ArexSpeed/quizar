@@ -160,7 +160,8 @@ const initialState = {
   ],
   selectedQuestions: [],
   categoriesApi: [],
-  questionsApi: []
+  questionsApi: [],
+  userResults: [],
 }
 
 export const slice = createSlice({
@@ -205,6 +206,10 @@ export const slice = createSlice({
     getQuestionsFromApi : (state, action) => {
       console.log(action.payload, 'payload question');
       state.questionsApi.push(action.payload.data);
+    },
+    fetchUserResults : (state, action) => {
+      console.log(action.payload, 'payload question');
+      state.userResults = action.payload.data;
     }
   },
   extraReducers: {
@@ -228,7 +233,8 @@ export const {
   toggleAnswer,
   filterQuestions,
   finish,
-  getQuestionsFromApi
+  getQuestionsFromApi,
+  fetchUserResults,
 } = slice.actions;
 
 export const getQuizCategories = state => state.quiz.categories;
@@ -239,5 +245,6 @@ export const getSelectedQuestions = state => state.quiz.selectedQuestions;
 //Select from API
 export const getQuizCategoriesApi = state => state.quiz.categoriesApi;
 export const getQuizQuestionsApi = state => state.quiz.questionsApi;
+export const getUserResults = state => state.quiz.userResults;
 
 export default slice.reducer;

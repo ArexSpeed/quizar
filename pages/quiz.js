@@ -5,6 +5,7 @@ import { next, reset, finish, getSelectedQuestions, getActiveQuestionNumber, get
 import styled, { keyframes } from "styled-components";
 import CountUp from 'react-countup';
 import Confetti from 'react-confetti'
+import axios from 'axios';
 
 const QuizPage = () => {
   const [answer, setAnswer] = useState({variant: '', correct: false});
@@ -45,11 +46,17 @@ const QuizPage = () => {
     setSummary(false);
   }
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
     const result = Math.ceil((points/questions.length)*100);
+    let payload = {
+      user: "Tanja",
+      category: "Programming",
+      result
+    }
+    console.log(payload, 'payload in handleFInish');
+    await axios.post("http://localhost:3000/api/results", payload)
     dispatch(finish({
       name: category, 
-      result
     }))
 
     handleReset();
