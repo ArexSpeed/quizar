@@ -5,7 +5,7 @@ import store from 'redux/store';
 import { fetchCategories, fetchQuestions } from 'redux/slices/quizSlice';
 
 store.dispatch(fetchCategories());
-store.dispatch(fetchQuestions());
+//store.dispatch(fetchQuestions());
 
 function MyApp({ Component, pageProps }) {
   return (

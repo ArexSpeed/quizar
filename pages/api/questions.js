@@ -2,7 +2,10 @@ import { connectToDatabase } from 'util/mongodb'
 
 export default async (req, res) => {
   const { db } = await connectToDatabase();
-  const data = await db.collection("questions").find().sort({_id: 1}).toArray();
+  const query = req.query;
+  console.log(query, 'query');
+  
+  const data = await db.collection("questions").find({"category": query.category}).sort({_id: 1}).toArray();
 
-  res.json(data);
+  return res.json(data);
 };
