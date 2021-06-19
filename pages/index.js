@@ -4,27 +4,7 @@ import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from 'redux/slices/userSlice';
-import { selectCategory, filterQuestions, getQuizCategories } from 'redux/slices/quizSlice';
-//import { connectToDatabase } from '../util/mongodb'
-
-// export async function getServerSideProps(context) {
-//   const { db } = await connectToDatabase()
-//   const data = await db.collection("questions").find().sort({_id: 1}).toArray();
-//   const isConnected = await client.isConnected()
-//   //console.log(data, 'data');
-//   const questions = data.map(q => {
-//     const qd = JSON.parse(JSON.stringify(q._id));
-//     return {
-//       id: qId,
-//       category: q.category,
-//       content: q.content,
-//       answers: q.answers
-//     }
-//   })
-//   return {
-//     props: { questions },
-//   }
-// }
+import { getQuizCategoriesApi, filterQuestions, getQuizCategories } from 'redux/slices/quizSlice';
 
 export default function Home() {
   const [activeNav, setActiveNav] = useState('')
@@ -34,6 +14,7 @@ export default function Home() {
   const dispatch = useDispatch();
   const user = useSelector(getUser);
   const categories = useSelector(getQuizCategories);
+  const categoriesApi = useSelector(getQuizCategoriesApi);
 
   useEffect(() => {
     setFinishedQuiz(0);
@@ -140,17 +121,17 @@ export default function Home() {
         {/* Quiz section */}
         <section className="flex flex-col justify-center items-start w-full mb-24">
           <h4 className="text-sm text-gray-400 uppercase my-4">Quizes</h4>
-          {categories.map(category => (
-            <div key={category.id} className="w-full h-20 my-2 flex flex-row justify-between items-center bg-green-100 rounded-md">
+          {categoriesApi[0]?.map(category => (
+            <div key={category._id} className="w-full h-20 my-2 flex flex-row justify-between items-center bg-green-100 rounded-md">
             <div className="px-2 mx-2 w-8 h-8 rounded-full flex justify-center items-center bg-green-200">
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M7 2a1 1 0 00-.707 1.707L7 4.414v3.758a1 1 0 01-.293.707l-4 4C.817 14.769 2.156 18 4.828 18h10.343c2.673 0 4.012-3.231 2.122-5.121l-4-4A1 1 0 0113 8.172V4.414l.707-.707A1 1 0 0013 2H7zm2 6.172V4h2v4.172a3 3 0 00.879 2.12l1.027 1.028a4 4 0 00-2.171.102l-.47.156a4 4 0 01-2.53 0l-.563-.187a1.993 1.993 0 00-.114-.035l1.063-1.063A3 3 0 009 8.172z" clipRule="evenodd" /></svg>
             </div>
             <div className="flex flex-col flex-1 justify-start items-start">
               <h4 className="font-semibold text-md">{category.name}</h4>
-              <h6 className="text-xs text-black text-opacity-50">{category.result}% result</h6>
+              <h6 className="text-xs text-black text-opacity-50">10% result</h6>
               <div className="relative pt-1 w-full">
                 <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-green-200">
-                  <div style={{ width: `${category.result}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-green-400"></div>
+                  <div style={{ width: `10%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-green-400"></div>
                 </div>
               </div>
             </div>

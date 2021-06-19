@@ -4,6 +4,11 @@ import axios from 'axios';
 export const fetchCategories = createAsyncThunk('quiz/categoriesApi', async () => {
   const response = await axios.get('http://localhost:3000/api/categories');
   return response.data
+});
+
+export const fetchQuestions = createAsyncThunk('quiz/questionsApi', async () => {
+  const response = await axios.get('http://localhost:3000/api/questions');
+  return response.data
 })
 
 const initialState = {
@@ -154,7 +159,8 @@ const initialState = {
     },
   ],
   selectedQuestions: [],
-  categoriesApi: []
+  categoriesApi: [],
+  questionsApi: []
 }
 
 export const slice = createSlice({
@@ -201,6 +207,10 @@ export const slice = createSlice({
     [fetchCategories.fulfilled]: (state, action) => {
       state.categoriesApi.push(action.payload);
       //return action.payload
+    },
+    [fetchQuestions.fulfilled]: (state, action) => {
+      state.questionsApi.push(action.payload);
+      //return action.payload
     }
   }
 });
@@ -221,5 +231,8 @@ export const getQuizQuestions = state => state.quiz.questions;
 export const getActiveQuestionNumber = state => state.quiz.activeQuestion;
 export const getCurrentCategory = state => state.quiz.selectedCategory;
 export const getSelectedQuestions = state => state.quiz.selectedQuestions;
+//Select from API
+export const getQuizCategoriesApi = state => state.quiz.categoriesApi;
+export const getQuizQuestionsApi = state => state.quiz.questionsApi;
 
 export default slice.reducer;

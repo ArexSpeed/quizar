@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
-import { next, reset, finish, getSelectedQuestions, getActiveQuestionNumber, getCurrentCategory, selectCategory } from 'redux/slices/quizSlice';
+import { next, reset, finish, getSelectedQuestions, getActiveQuestionNumber, getCurrentCategory, selectCategory, getQuizQuestionsApi } from 'redux/slices/quizSlice';
 import styled, { keyframes } from "styled-components";
 import CountUp from 'react-countup';
 import Confetti from 'react-confetti'
@@ -10,10 +10,12 @@ const QuizPage = () => {
   const [answer, setAnswer] = useState({variant: '', correct: false});
   const [points, setPoints] = useState(0);
   const [summary, setSummary] = useState(false);
-  const questions = useSelector(getSelectedQuestions);
+  //const questions = useSelector(getSelectedQuestions);
+  const questionsApi = useSelector(getQuizQuestionsApi);
   const questionNumber = useSelector(getActiveQuestionNumber);
   const category = useSelector(getCurrentCategory);
   const dispatch = useDispatch();
+  const questions = questionsApi[0];
 
   const nextQuestion = () => {
     if(questions[questionNumber + 1]) {
