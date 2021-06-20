@@ -68,7 +68,7 @@ const QuizPage = () => {
       width: 0%;
     }
     to {
-      width: ${Math.ceil((points/questions.length)*100)}%;
+      width: ${Math.ceil((points/questions?.length)*100)}%;
     }
   `;
 
@@ -93,11 +93,11 @@ const QuizPage = () => {
           <div className="flex flex-row justify-center items-center w-full h-4 my-4 p-4 rounded-full bg-white shadow-sm">
             <div className="relative pt-1 w-full">
               <div className="overflow-hidden h-2 text-xs flex rounded bg-blue-200">
-                <div style={{ width: `${Math.ceil(((questionNumber+1)/questions.length)*100)}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-400"></div>
+                <div style={{ width: `${Math.ceil(((questionNumber+1)/questions?.length)*100)}%` }} className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-blue-400"></div>
               </div>
             </div>
             <div className="mx-2 text-sm">
-              {questionNumber+1}/{questions.length}
+              {questionNumber+1}/{questions?.length}
             </div>
           </div>
         </section>

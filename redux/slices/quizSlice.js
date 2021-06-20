@@ -205,11 +205,13 @@ export const slice = createSlice({
     },
     getQuestionsFromApi : (state, action) => {
       console.log(action.payload, 'payload question');
+      state.questionsApi = [];
       state.questionsApi.push(action.payload.data);
     },
     fetchUserResults : (state, action) => {
       console.log(action.payload, 'payload question');
-      state.userResults = action.payload.data;
+      state.userResults = [];
+      state.userResults.push(action.payload.data);
     }
   },
   extraReducers: {
