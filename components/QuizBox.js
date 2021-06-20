@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getUserResults, getQuestionsFromApi } from 'redux/slices/quizSlice';
+import { getUserResults, getQuestionsFromApi, selectCategory } from 'redux/slices/quizSlice';
 import axios from 'axios';
 import Link from 'next/link';
 
@@ -14,7 +14,8 @@ const QuizBox = ({ category }) => {
     userResults[0]?.filter(result => result.category === category.name && setResultNumber(result.result))
   }, [])
   const chooseQuiz = async (category) => {
-    const data = await axios.get(`http://localhost:3000/api/questions?category=${category}`)
+    const data = await axios.get(`http://localhost:3000/api/questions?category=${category}`);
+    dispatch(selectCategory(category));
     dispatch(getQuestionsFromApi(data));
   }
 

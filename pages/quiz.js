@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
+import { getUser } from 'redux/slices/userSlice';
 import { next, reset, finish, getSelectedQuestions, getActiveQuestionNumber, getCurrentCategory, selectCategory, getQuizQuestionsApi } from 'redux/slices/quizSlice';
 import styled, { keyframes } from "styled-components";
 import CountUp from 'react-countup';
@@ -16,6 +17,7 @@ const QuizPage = () => {
   const questionNumber = useSelector(getActiveQuestionNumber);
   const category = useSelector(getCurrentCategory);
   const dispatch = useDispatch();
+  const user = useSelector(getUser);
   const questions = questionsApi[0];
 
   const nextQuestion = () => {
@@ -49,8 +51,8 @@ const QuizPage = () => {
   const handleFinish = async () => {
     const result = Math.ceil((points/questions.length)*100);
     let payload = {
-      user: "Tanja",
-      category: "Programming",
+      user: user.username,
+      category: category,
       result
     }
     console.log(payload, 'payload in handleFInish');

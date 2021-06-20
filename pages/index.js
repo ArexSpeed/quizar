@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from 'redux/slices/userSlice';
-import { getQuizCategoriesApi, filterQuestions, getQuizCategories, fetchUserResults } from 'redux/slices/quizSlice';
+import { getQuizCategoriesApi, filterQuestions, getQuizCategories, fetchUserResults, getUserResults } from 'redux/slices/quizSlice';
 import axios from 'axios';
 import QuizBox from 'components/QuizBox';
 
@@ -16,6 +16,7 @@ export default function Home() {
   const user = useSelector(getUser);
   const categories = useSelector(getQuizCategories);
   const categoriesApi = useSelector(getQuizCategoriesApi);
+  const userResults = useSelector(getUserResults);
 
   useEffect(() => {
     setFinishedQuiz(0);
@@ -26,6 +27,8 @@ export default function Home() {
     const data = await axios.get(`http://localhost:3000/api/results?user=Tanja`)
     dispatch(fetchUserResults(data));
   }, [])
+
+  const calculateAvgScore = userResults[0]?.reduce((acc, item) => acc + item.result, 0);
 
   return (
     <>
@@ -92,7 +95,7 @@ export default function Home() {
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14l9-5-9-5-9 5 9 5z" /><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" /></svg>
               </div>
               <div className="text-2xl font-semibold">
-                {finishedQuiz}/{categories.length}
+                {userResults[0]?.length}/{categories.length}
               </div>
               <div className="text-sm font-semibold text-gray-500">
                 Finished quiz
@@ -114,7 +117,7 @@ export default function Home() {
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M11.3 1.046A1 1 0 0112 2v5h4a1 1 0 01.82 1.573l-7 10A1 1 0 018 18v-5H4a1 1 0 01-.82-1.573l7-10a1 1 0 011.12-.38z" clipRule="evenodd" /></svg>
               </div>
               <div className="text-2xl font-semibold">
-                80%
+                {(calculateAvgScore/userResults[0].length).toFixed(2)}%
               </div>
               <div className="text-sm font-semibold text-gray-500">
                 Avg score
