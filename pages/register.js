@@ -61,8 +61,8 @@ export default function UserNew() {
     !session && !loading&& (
       <div className="relative flex flex-col items-center justify-start h-screen w-full mx-auto md:max-w-screen-md p-2 bg-gray-100 overflow-x-hidden overflow-y-auto">
         <header className="relative flex flex-col justify-center items-center w-full h-1/3 mx-2 rounded-big bg-gradient-to-r from-blue-400 to-purple-500">
-        <div className="text-white font-semibold text-2xl py-2">Create new account</div>
-      </header>
+          <div className="text-white font-semibold text-2xl py-2">Create new account</div>
+        </header>
       <form className="flex flex-col justify-center items-start p-4 w-full" onSubmit={handleSubmit} ref={registerForm}>
             <div className="w-full h-16 my-2 flex flex-row justify-start items-center bg-white shadow-md rounded-md">
               <input className="px-2 text-xl w-full h-full" type="name" id="name" name="name" placeholder="Name" required />
