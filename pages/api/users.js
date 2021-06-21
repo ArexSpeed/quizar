@@ -1,4 +1,5 @@
-import { connectToDatabase } from 'util/mongodb'
+import { connectToDatabase } from 'util/mongodb';
+import create from 'services/users/create';
 
 export default async (req, res) => {
   const { client, db } = await connectToDatabase();
@@ -16,10 +17,10 @@ export default async (req, res) => {
       try {
         const payload = req.body;
         console.log(payload, 'body')
-        const data = await db.collection("users").insertOne(payload);
-        res.status(200).json({ status: 'updated', data});
+        const data = await create(payload);
+        res.status(200).json({ status: 'created', data});
       } catch (error) {
-        res.status(422).json({ status: 'not_updated', error });
+        res.status(422).json({ status: 'not_created', error });
       }
       break;
     }

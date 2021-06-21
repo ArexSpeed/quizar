@@ -19,13 +19,13 @@ const authorizeUser = async (payload) => {
     return null;
   }
 
-  // const passwordHash = crypto
-  //   .pbkdf2Sync(password, user.fields.passwordSalt, 1000, 64, `sha512`)
-  //   .toString(`hex`);
+  const passwordHash = crypto
+    .pbkdf2Sync(password, user.passwordSalt, 1000, 64, `sha512`)
+    .toString(`hex`);
 
-  // if (passwordHash !== user.fields.passwordHash) {
-  //   return null;
-  // }
+  if (passwordHash !== user.passwordHash) {
+    return null;
+  }
 
   return {
     id: user._id,

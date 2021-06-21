@@ -32,7 +32,7 @@ const Login = () => {
     if (ok) {
       router.push('/');
     } else {
-      setError('Not authorized. Try again.');
+      setError('Wrong password or login');
       setFormProcessing(false);
     }
   };
@@ -54,7 +54,7 @@ const Login = () => {
             <button  className="flex justify-center items-center m-auto h-16 w-32 px-6 my-6 text-white text-xl font-bold bg-gradient-to-r from-blue-400 to-red-500 rounded-md" type="submit" disabled={formProcessing}>
               {formProcessing ? 'Process...' : 'Login'}
             </button>
-            {error && <div className="w-full h-12 my-2 text-center text-md text-white flex flex-row justify-start items-center bg-red shadow-md rounded-md">Account not created {error}</div>}
+            {error && <div className="w-full h-12 my-2 text-center text-md bg-red-500 text-white flex flex-row justify-center items-center shadow-md rounded-md">{error}</div>}
             <p className="flex flex-row justify-center items-center">
               You don't have an account? 
               <Link href="/register">

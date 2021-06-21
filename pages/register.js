@@ -15,9 +15,47 @@ export default function UserNew() {
     router.push('/');
   }
 
-  const handleSubmit = () => {
-    console.log('submit');
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (formProcessing) return;
+    setError(null);
+    setFormProcessing(true);
+    const form = new FormData(registerForm.current);
+    const payload = {
+      email: form.get('email'),
+      name: form.get('name'),
+      password: form.get('password')
+    };
+
+    if(payload.password.length < 6) {
+      setError('Password is too short. Min. 6 characters');
+      setFormProcessing(false);
+      return;
+    }
+
+    if (payload.password !== form.get('passwordConfirm')) {
+      setError('Given passwords not match');
+      setFormProcessing(false);
+      return;
+    }
+
+    const response = await fetch('/api/users', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.ok) {
+      setCreateInfo('Account is created. Now you can login');
+      setFormProcessing(false);
+    } else {
+      const payload = await response.json();
+      setFormProcessing(false);
+      setError(payload.error);
+    }
+  };
 
   return (
     !session && !loading&& (
@@ -41,7 +79,7 @@ export default function UserNew() {
             <button  className="flex justify-center items-center m-auto h-16 w-32 px-6 my-6 text-white text-xl font-bold bg-gradient-to-r from-blue-400 to-red-500 rounded-md" type="submit" disabled={formProcessing}>
               {formProcessing ? 'Creating...' : 'Register'}
             </button>
-            {error && <div className="w-full h-12 my-2 text-center text-md text-white flex flex-row justify-start items-center bg-red shadow-md rounded-md">Account not created {error}</div>}
+            {error && <div className="w-full h-12 my-2 text-center text-md bg-red-500 text-white flex flex-row justify-start items-center shadow-md rounded-md">Account not created {error}</div>}
             <p className="flex flex-row justify-center items-center">
               Have already account? 
               <Link href="/login">
@@ -50,6 +88,7 @@ export default function UserNew() {
                 </button>
               </Link>
             </p>
+            {createInfo && <p>{createInfo}</p>}
           </form>
       </div>
     )

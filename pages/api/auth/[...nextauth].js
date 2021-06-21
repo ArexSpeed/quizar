@@ -32,7 +32,7 @@ export default NextAuth({
           // If you return null or false then the credentials will be rejected
           return null;
           // You can also Reject this callback with an Error or with a URL:
-          // throw new Error('error message') // Redirect to error page
+          //throw new Error('Wrong password') // Redirect to error page
           // throw '/path/to/redirect'        // Redirect to a URL
         }
       }
