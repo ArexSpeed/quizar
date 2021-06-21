@@ -11,6 +11,8 @@
     "@reduxjs/toolkit": "^1.6.0",
     "axios": "^0.21.1",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "joi": "^17.4.0",
     "mongodb": "^3.6.9",
     "mongoose": "^5.12.14",
     "next": "latest",

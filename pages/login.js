@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
+import { signIn } from 'next-auth/client';
 
 const Login = () => {
   const [session, loading] = useSession();
@@ -13,10 +14,29 @@ const Login = () => {
   if (session) {
     router.push('/');
   }
+  console.log(session, 'session');
 
-  const handleSubmit = () => {
-    console.log('submit');
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (formProcessing) return;
+    setError(null);
+    setFormProcessing(true);
+    const form = new FormData(loginForm.current);
+    console.log(form.get('email'), 'form');
+    const { ok } = await signIn('credentials', {
+      redirect: false,
+      email: form.get('email'),
+      password: form.get('password')
+    });
+
+    if (ok) {
+      router.push('/');
+    } else {
+      setError('Not authorized. Try again.');
+      setFormProcessing(false);
+    }
+  };
+
   return (
       !session && !loading&& (
       <div className="relative flex flex-col items-center justify-start h-screen w-full mx-auto md:max-w-screen-md p-2 bg-gray-100 overflow-x-hidden overflow-y-auto">
@@ -25,7 +45,7 @@ const Login = () => {
         </header>
       <form className="flex flex-col justify-center items-start p-4 w-full" onSubmit={handleSubmit} ref={loginForm}>
             <div className="w-full h-16 my-2 flex flex-row justify-start items-center bg-white shadow-md rounded-md">
-              <input className="px-2 text-xl w-full h-full" type="name" id="name" name="name" placeholder="Name" required />
+              <input className="px-2 text-xl w-full h-full" type="email" id="email" name="email" placeholder="Email" required />
             </div>
             <div className="w-full h-16 my-2 flex flex-row justify-start items-center bg-white shadow-md rounded-md">
               <input className="px-2 text-xl w-full h-full" type="password" id="password" name="password" placeholder="Password" required />

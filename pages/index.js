@@ -1,13 +1,15 @@
 import Head from 'next/head'
-import { useRouter } from 'next/router'
+import { useRouter } from 'next/router';
+import { signOut, useSession } from 'next-auth/client';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUser } from 'redux/slices/userSlice';
+import { getUser, setUser } from 'redux/slices/userSlice';
 import { getQuizCategoriesApi, filterQuestions, getQuizCategories, fetchUserResults, getUserResults } from 'redux/slices/quizSlice';
 import axios from 'axios';
 import QuizBox from 'components/QuizBox';
 
 export default function Home() {
+  const [session] = useSession();
   const [activeNav, setActiveNav] = useState('')
   const [finishedQuiz, setFinishedQuiz] = useState(0);
   const router = useRouter();
@@ -17,6 +19,12 @@ export default function Home() {
   const categories = useSelector(getQuizCategories);
   const categoriesApi = useSelector(getQuizCategoriesApi);
   const userResults = useSelector(getUserResults);
+
+  useEffect(() => {
+    if(session) {
+      dispatch(setUser(session.user))
+    }
+  }, [session])
 
   useEffect(() => {
     setFinishedQuiz(0);
@@ -29,7 +37,7 @@ export default function Home() {
   }, [])
 
   const calculateAvgScore = userResults[0]?.reduce((acc, item) => acc + item.result, 0);
-
+  console.log(session, 'session in index.js');
   return (
     <>
       <Head>
@@ -59,6 +67,7 @@ export default function Home() {
             <h5 className={`${(activeNav || path) === '/stats' ? 'block' : 'hidden'} text-purple-500 font-semibold`}>Stats</h5>
           </li>
           <li 
+            onClick={signOut}
             className="relative w-full h-20 flex flex-col justify-center items-center cursor-pointer"
             onMouseEnter={() => setActiveNav('/profile')}
             onTouchMoveCapture={() => setActiveNav('/profile')}
