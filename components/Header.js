@@ -13,7 +13,18 @@ const Header = () => {
       <>
       <div className="flex justify-center items-center rounded-full w-24 h-24 bg-white">
         <div className="w-22 h-22 rounded-full overflow-hidden flex justify-center">
-          <img className="object-cover" src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="" />
+          {session.user.image ? (
+            <img className="object-cover" src={session.user.image} alt="" />
+            )
+            :
+            (
+              <div className="w-22 h-22 rounded-full bg-blue-400 flex justify-center items-center">
+                <span className="text-5xl text-blue-700">{session.user.name.substr(0,1).toUpperCase()}</span>
+              </div>
+            )
+        
+        }
+          
         </div>
         </div>
         <div className="text-white font-semibold text-2xl py-2">{user.username}</div>

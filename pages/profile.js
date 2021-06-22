@@ -14,7 +14,7 @@ const Profile = () => {
   const [createInfo, setCreateInfo] = useState();
   const [changePassword, setChangePassword] = useState(false);
   const [formProcessing, setFormProcessing] = useState(false);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState("https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500");
+  const [imagePreviewUrl, setImagePreviewUrl] = useState(session.user.image);
 
   const handleImagePreview = (e) => {
     console.log('handleImagPreview');
@@ -84,14 +84,17 @@ const Profile = () => {
       <main className="flex flex-col justify-center items-start p-4 w-full mb-24">
         <h2 className="font-semibold text-2xl w-full text-center">Change your account data</h2>
         <form className="flex flex-col justify-center items-start p-4 w-full" onSubmit={handleSubmit} ref={editForm}>
-          {imagePreviewUrl && (
+
+            {imagePreviewUrl ? (
               <div className="w-22 h-22 rounded-full overflow-hidden flex justify-center">
                 <img className="object-cover" src={imagePreviewUrl} alt="" />
               </div>
+            ) : (
+              <div className="w-22 h-22 rounded-full bg-blue-400 flex justify-center items-center">
+                <span className="text-5xl text-blue-700">{session.user.name.substr(0,1).toUpperCase()}</span>
+              </div>
             )}
-          {/* <div className="w-22 h-22 rounded-full overflow-hidden flex justify-center">
-            <img className="object-cover" src="https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="" />
-          </div> */}
+          
             <input type="file" id="image" name="image" onChange={handleImagePreview} />
           <div className="w-full h-16 my-2 flex flex-row justify-start items-center bg-white shadow-md rounded-md">
             <input className="px-2 text-xl w-full h-full" type="name" id="name" name="name" placeholder="Name" defaultValue={session.user.name} required />
