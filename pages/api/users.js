@@ -33,12 +33,14 @@ export default async (req, res) => {
         console.log(query, 'query user');
         console.log(payload, 'payload put')
         const filter = { _id: id};
-        const updateDoc = {
-          $set: {
-            name: payload.name,
-            email: payload.email
-          },
-        };
+          const updateDoc = {
+            $set: {
+              name: payload.name,
+              email: payload.email, 
+              image: payload.imageUrl
+            },
+          };
+        
         const options = { upsert: true };
         const data = await db.collection("users").updateOne(filter, updateDoc, options);
         //console.log(data, 'find user');

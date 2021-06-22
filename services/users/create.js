@@ -35,6 +35,7 @@ const create = async (payload) => {
     {
       email,
       name,
+      image: '',
       passwordSalt,
       passwordHash
     }

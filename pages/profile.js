@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { useSelector } from 'react-redux';
 import { getUser } from 'redux/slices/userSlice';
 import { useSession } from 'next-auth/client';
+import uploadImage from 'util/uploadImage';
 import Nav from 'components/Nav';
 import Header from 'components/Header';
 
@@ -16,6 +17,7 @@ const Profile = () => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState("https://images.pexels.com/photos/3763188/pexels-photo-3763188.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500");
 
   const handleImagePreview = (e) => {
+    console.log('handleImagPreview');
     const url = window.URL.createObjectURL(e.target.files[0]);
 
     setImagePreviewUrl(url);
@@ -27,17 +29,19 @@ const Profile = () => {
     setError(null);
     setFormProcessing(true);
     const form = new FormData(editForm.current);
-
+    console.log(form, 'all form');
     const payload = {
       name: form.get('name'),
       email: form.get('email'),
     };
 
-    // if (form.get('image')) {
-    //   const picture = form.get('image');
-    //   const file = await uploadImage(picture);
-    //   payload.imageUrl = file.secure_url;
-    // }
+    if (form.get('image')) {
+      console.log('get Image');
+      const picture = form.get('image');
+      const file = await uploadImage(picture);
+      console.log(file, 'upload imge');
+      payload.imageUrl = file.secure_url;
+    }
 
     if (form.get('password')) {
       payload.password = form.get('password');
@@ -73,6 +77,7 @@ const Profile = () => {
 
   }
   return (
+    session ? (
     <div className="relative flex flex-col items-center justify-start h-screen w-full mx-auto md:max-w-screen-md p-2 bg-gray-100 overflow-x-hidden overflow-y-auto">
       <Nav />
       <Header />
@@ -113,12 +118,17 @@ const Profile = () => {
           <button type="submit"  className="flex justify-center items-center m-auto h-16 w-32 px-6 my-6 text-white text-xl font-bold bg-gradient-to-r from-blue-400 to-red-500 rounded-md" type="submit" disabled={formProcessing}>
             {formProcessing ? 'Creating...' : 'Change'}
           </button>
-          {error && <div className="w-full h-12 my-2 text-center text-md bg-red-500 text-white flex flex-row justify-start items-center shadow-md rounded-md">Account not created {error}</div>}
+          {error && <div className="w-full h-12 my-2 text-center text-md bg-red-500 text-white flex flex-row justify-start items-center shadow-md rounded-md">{error}</div>}
           {createInfo && <p>{createInfo}</p>}
         </form>
       </main>
 
     </div>
+    ):
+    (
+      <div className="relative flex flex-col items-center justify-start h-screen w-full mx-auto md:max-w-screen-md p-2 bg-gray-100 overflow-x-hidden overflow-y-auto">
+      </div>
+    )
   )
 }
 

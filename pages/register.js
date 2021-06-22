@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import Link from 'next/link';
 import { useSession } from 'next-auth/client';
 import { useRouter } from 'next/router';
+import { signIn } from 'next-auth/client';
 
 export default function UserNew() {
   const [session, loading] = useSession();
@@ -50,6 +51,12 @@ export default function UserNew() {
     if (response.ok) {
       setCreateInfo('Account is created. Now you can login');
       setFormProcessing(false);
+      await signIn('credentials', {
+        redirect: false,
+        email: form.get('email'),
+        password: form.get('password')
+      });
+      router.push('/');
     } else {
       const payload = await response.json();
       setFormProcessing(false);
