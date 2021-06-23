@@ -4,9 +4,8 @@ import { ObjectID } from 'mongodb';
 
 export default async (req, res) => {
   const { client, db } = await connectToDatabase();
-  const isConnected = await client.isConnected();
-  const data = await db.collection("users").find().sort({_id: 1}).toArray();
-  console.log(isConnected, 'connect');
+  // const isConnected = await client.isConnected();
+  // console.log(isConnected, 'connect');
   switch (req.method) {
     case 'GET': {
       const data = await db.collection("users").find({"user": query.user}).sort({_id: 1}).toArray();
@@ -55,5 +54,4 @@ export default async (req, res) => {
       res.status(400);
   }
 
-  res.json(data);
 };

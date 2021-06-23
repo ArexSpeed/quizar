@@ -11,7 +11,7 @@ const Profile = () => {
   const [session, loading] = useSession();
   const editForm = useRef();
   const [error, setError] = useState();
-  const [createInfo, setCreateInfo] = useState();
+  const [info, setInfo] = useState();
   const [changePassword, setChangePassword] = useState(false);
   const [formProcessing, setFormProcessing] = useState(false);
   const [imagePreviewUrl, setImagePreviewUrl] = useState(session.user.image);
@@ -67,7 +67,8 @@ const Profile = () => {
     });
 
     if (response.ok) {
-      setError('Data is changed');
+      setInfo('Your data are changed. Please re-login!');
+      setFormProcessing(false);
     } else {
       const payload = await response.json();
       setFormProcessing(false);
@@ -122,7 +123,7 @@ const Profile = () => {
             {formProcessing ? 'Creating...' : 'Change'}
           </button>
           {error && <div className="w-full h-12 my-2 text-center text-md bg-red-500 text-white flex flex-row justify-start items-center shadow-md rounded-md">{error}</div>}
-          {createInfo && <p>{createInfo}</p>}
+          {info && <div className="w-full h-12 my-2 text-center text-md bg-green-500 text-white flex flex-row justify-start items-center shadow-md rounded-md">{info}</div>}
         </form>
       </main>
 
