@@ -10,6 +10,7 @@ import axios from 'axios';
 
 const QuizPage = () => {
   const [answer, setAnswer] = useState({variant: '', correct: false});
+  const [randomAnswer, setRandomAnswer] = useState([3,2,0,1]); //mix answers array 
   const [points, setPoints] = useState(0);
   const [summary, setSummary] = useState(false);
   //const questions = useSelector(getSelectedQuestions);
@@ -20,10 +21,26 @@ const QuizPage = () => {
   const user = useSelector(getUser);
   const questions = questionsApi[0];
 
+  const randomArrays = () => {
+    const array = [0,1,2,3];
+    const newArray = [];
+
+    for (let i = 0; i<4; i++) {
+      const random = Math.floor(Math.random()*array.length);
+      newArray.push(array[random])
+      array.splice(random, 1)
+      
+    }
+    return newArray;
+  }
+
   const nextQuestion = () => {
     if(questions[questionNumber + 1]) {
       dispatch(next());
-      answer.correct && setPoints(points+1)
+      answer.correct && setPoints(points+1);
+      const randomNumbers = randomArrays();
+      setRandomAnswer(randomNumbers);
+      console.log(randomAnswer, 'random answer');
       setAnswer({
         variant: '',
         correct: false
@@ -114,56 +131,56 @@ const QuizPage = () => {
             onClick={() => {
               setAnswer({
                 variant: 'A',
-                correct: questions[questionNumber].answers[0].valid
+                correct: questions[questionNumber].answers[randomAnswer[0]].valid
               });
             }}
           >
             <div className="px-2 mx-2 w-8 h-8 rounded-full flex justify-center items-center bg-blue-200">
               <span className={`${answer === 'A' ? 'text-white' : 'text-blue-400'}`}>A</span>
             </div>
-            <h3 className={`font-semibold text-2xl ${answer === 'A' ? 'text-white' : 'text-gray-800'}`}>{questions[questionNumber].answers[0].content}</h3>
+            <h3 className={`font-semibold text-2xl ${answer === 'A' ? 'text-white' : 'text-gray-800'}`}>{questions[questionNumber].answers[randomAnswer[0]].content}</h3>
           </article>
           <article 
             className={`w-full h-20 my-2 flex flex-row justify-start items-center bg-white shadow-md rounded-md ${answer.variant === 'B' && 'bg-gradient-to-r from-blue-400 to-red-500'}`}
             onClick={() => {
               setAnswer({
                 variant: 'B',
-                correct: questions[questionNumber].answers[1].valid
+                correct: questions[questionNumber].answers[randomAnswer[1]].valid
               });
             }}
           >
             <div className="px-2 mx-2 w-8 h-8 rounded-full flex justify-center items-center bg-blue-200">
               <span className={`${answer === 'B' ? 'text-white' : 'text-blue-400'}`}>B</span>
             </div>
-            <h3 className={`font-semibold text-2xl ${answer === 'B' ? 'text-white' : 'text-gray-800'}`}>{questions[questionNumber].answers[1].content}</h3>
+            <h3 className={`font-semibold text-2xl ${answer === 'B' ? 'text-white' : 'text-gray-800'}`}>{questions[questionNumber].answers[randomAnswer[1]].content}</h3>
           </article>
           <article 
             className={`w-full h-20 my-2 flex flex-row justify-start items-center bg-white shadow-md rounded-md ${answer.variant === 'C' && 'bg-gradient-to-r from-blue-400 to-red-500'}`}
             onClick={() => {
               setAnswer({
                 variant: 'C',
-                correct: questions[questionNumber].answers[2].valid
+                correct: questions[questionNumber].answers[randomAnswer[2]].valid
               });
             }}
           >
             <div className="px-2 mx-2 w-8 h-8 rounded-full flex justify-center items-center bg-blue-200">
               <span className={`${answer === 'C' ? 'text-white' : 'text-blue-400'}`}>C</span>
             </div>
-            <h3 className={`font-semibold text-2xl ${answer === 'C' ? 'text-white' : 'text-gray-800'}`}>{questions[questionNumber].answers[2].content}</h3>
+            <h3 className={`font-semibold text-2xl ${answer === 'C' ? 'text-white' : 'text-gray-800'}`}>{questions[questionNumber].answers[randomAnswer[2]].content}</h3>
           </article>
           <article 
             className={`w-full h-20 my-2 flex flex-row justify-start items-center bg-white shadow-md rounded-md ${answer.variant === 'D' && 'bg-gradient-to-r from-blue-400 to-red-500'}`}
             onClick={() => {
               setAnswer({
                 variant: 'D',
-                correct: questions[questionNumber].answers[3].valid
+                correct: questions[questionNumber].answers[randomAnswer[3]].valid
               });
             }}
           >
             <div className="px-2 mx-2 w-8 h-8 rounded-full flex justify-center items-center bg-blue-200">
               <span className={`${answer === 'D' ? 'text-white' : 'text-blue-400'}`}>D</span>
             </div>
-            <h3 className={`font-semibold text-2xl ${answer === 'D' ? 'text-white' : 'text-gray-800'}`}>{questions[questionNumber].answers[3].content}</h3>
+            <h3 className={`font-semibold text-2xl ${answer === 'D' ? 'text-white' : 'text-gray-800'}`}>{questions[questionNumber].answers[randomAnswer[3]].content}</h3>
           </article>
         </section>
         <button 
