@@ -12,16 +12,18 @@ import Nav from 'components/Nav';
 import Header from 'components/Header';
 
 export default function Home() {
-  const [session] = useSession();
+  const [session, loading] = useSession();
   const [finishedQuiz, setFinishedQuiz] = useState(0);
   const dispatch = useDispatch();
   const categories = useSelector(getQuizCategories);
   const categoriesApi = useSelector(getQuizCategoriesApi);
   const userResults = useSelector(getUserResults);
 
-  useEffect(() => {
+  useEffect(async () => {
     if(session) {
-      dispatch(setUser(session.user))
+      dispatch(setUser(session.user));
+      const data = await axios.get(`http://localhost:3000/api/results?user=${session.user.name}`)
+      dispatch(fetchUserResults(data));
     }
   }, [session])
 
@@ -30,16 +32,24 @@ export default function Home() {
     categories.filter(category => category.finished && setFinishedQuiz(finishedQuiz+1));
   }, [categories])
 
-  useEffect(async () => {
-    if(session){
-      const data = await axios.get(`http://localhost:3000/api/results?user=${session.user.name}`)
-      dispatch(fetchUserResults(data));
-    }
-    
-  }, [])
 
   const calculateAvgScore = userResults[0]?.reduce((acc, item) => acc + item.result, 0);
   console.log(session, 'session in index.js');
+
+  const filterFinishedQuizes = () => {
+    const categoryArray = []
+    userResults[0]?.forEach(result => categoryArray.push(result.category));
+    let uniqueCategory = [...new Set(categoryArray)];
+    return uniqueCategory.length;
+  }
+
+  if(!session) {
+    return (
+      <>
+      <p>Zaloguj sie</p>
+      </>
+    )
+  }
   return (
     <>
       <Head>
@@ -58,7 +68,7 @@ export default function Home() {
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14l9-5-9-5-9 5 9 5z" /><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14zm-4 6v-7.5l4-2.222" /></svg>
               </div>
               <div className="text-2xl font-semibold">
-                {userResults[0]?.length ? userResults[0].length : '0'}/{categories.length}
+                {filterFinishedQuizes()}/{categoriesApi[0].length}
               </div>
               <div className="text-sm font-semibold text-gray-500">
                 Finished quiz
@@ -89,12 +99,15 @@ export default function Home() {
           </div>
         </section>
         {/* Quiz section */}
+        {session && !loading && 
         <section className="flex flex-col justify-center items-start w-full mb-24">
           <h4 className="text-sm text-gray-400 uppercase my-4">Quizes</h4>
+
           {categoriesApi[0]?.map(category => (
             <QuizBox key={category._id} category={category} />
           ))}
         </section>
+        }
       </main>
       </div>
     </>

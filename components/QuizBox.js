@@ -6,13 +6,22 @@ import Link from 'next/link';
 
 
 const QuizBox = ({ category }) => {
-  const [resultNumber, setResultNumber] = useState(0);
+  const [resultNumber, setResultNumber] = useState([]);
   const userResults = useSelector(getUserResults);
 
   const dispatch = useDispatch();
   useEffect(() => {
-    userResults[0]?.filter(result => result.category === category.name && setResultNumber(result.result))
-  }, [])
+    console.log('useEffect');
+      setResultNumber([]);
+      userResults[0]?.filter(result => result.category === category.name && setResultNumber(prev => [...prev,result.result]));
+  }, [userResults]);
+
+  const sortResult = () => {
+    resultNumber.sort((a,b) => b-a);
+    console.log(resultNumber, 'sortResult')
+    return resultNumber[0];
+  }
+
   const chooseQuiz = async (category) => {
     const data = await axios.get(`http://localhost:3000/api/questions?category=${category}`);
     dispatch(selectCategory(category));
@@ -20,8 +29,10 @@ const QuizBox = ({ category }) => {
   }
 
 
+
   return (
     <div className="w-full h-20 my-2 flex flex-row justify-between items-center bg-green-100 rounded-md">
+      {console.log('render')}
       <div className="px-2 mx-2 w-8 h-8 rounded-full flex justify-center items-center bg-green-200">
         <svg
           className="w-6 h-6"
@@ -39,12 +50,12 @@ const QuizBox = ({ category }) => {
       <div className="flex flex-col flex-1 justify-start items-start">
         <h4 className="font-semibold text-md">{category.name}</h4>
         <h6 className="text-xs text-black text-opacity-50">
-          {resultNumber}%
+          {sortResult()}%
         </h6>
         <div className="relative pt-1 w-full">
           <div className="overflow-hidden h-2 mb-4 text-xs flex rounded bg-green-200">
             <div
-              style={{ width: `${resultNumber}%` }}
+              style={{ width: `${resultNumber[0]}%` }}
               className="shadow-none flex flex-col text-center whitespace-nowrap text-white justify-center bg-green-400"
             ></div>
           </div>
