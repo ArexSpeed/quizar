@@ -1,18 +1,14 @@
-import Head from 'next/head'
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { signOut, useSession } from 'next-auth/client';
 import { useState, useEffect } from 'react';
+import { useSession } from 'next-auth/client';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUser, setUser } from 'redux/slices/userSlice';
 import { getQuizCategoriesApi, filterQuestions, getQuizCategories, fetchUserResults, getUserResults } from 'redux/slices/quizSlice';
 import axios from 'axios';
-import QuizBox from 'components/QuizBox';
 import Nav from 'components/Nav';
 import Header from 'components/Header';
+import QuizStats from 'components/QuizStats';
 
-export default function Home() {
-  const [session, loading] = useSession();
+const StatsPage = () => {
+  const [session] = useSession();
   const [finishedQuiz, setFinishedQuiz] = useState(0);
   const dispatch = useDispatch();
   const categories = useSelector(getQuizCategories);
@@ -21,7 +17,6 @@ export default function Home() {
 
   useEffect(async () => {
     if(session) {
-      dispatch(setUser(session.user));
       const data = await axios.get(`http://localhost:3000/api/results?user=${session.user.name}`)
       dispatch(fetchUserResults(data));
     }
@@ -34,7 +29,6 @@ export default function Home() {
 
 
   const calculateAvgScore = userResults[0]?.reduce((acc, item) => acc + item.result, 0);
-  console.log(session, 'session in index.js');
 
   const filterFinishedQuizes = () => {
     const categoryArray = []
@@ -43,14 +37,8 @@ export default function Home() {
     return uniqueCategory.length;
   }
 
-
   return (
-    <>
-      <Head>
-        <title>Quizar</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <div className="relative flex flex-col items-center justify-start h-screen w-full mx-auto md:max-w-screen-md p-2 bg-gray-100 overflow-x-hidden overflow-y-auto">
+    <div className="relative flex flex-col items-center justify-start h-screen w-full mx-auto md:max-w-screen-md p-2 bg-gray-100 overflow-x-hidden overflow-y-auto">
       <Nav />
       <Header />
       <main className="flex flex-col justify-center items-start p-4 w-full">
@@ -82,17 +70,18 @@ export default function Home() {
           </div>
         </section>
         {/* Quiz section */}
-        {session && !loading && 
+        {session && 
         <section className="flex flex-col justify-center items-start w-full mb-24">
-          <h4 className="text-sm text-gray-400 uppercase my-4">Quizes</h4>
+          <h4 className="text-sm text-gray-400 uppercase my-4">Quiz Stats</h4>
 
           {categoriesApi[0]?.map(category => (
-            <QuizBox key={category._id} category={category} />
+            <QuizStats key={category._id} category={category} />
           ))}
         </section>
         }
       </main>
       </div>
-    </>
   )
 }
+
+export default StatsPage
