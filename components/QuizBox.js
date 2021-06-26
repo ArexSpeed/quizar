@@ -11,14 +11,12 @@ const QuizBox = ({ category }) => {
 
   const dispatch = useDispatch();
   useEffect(() => {
-    console.log('useEffect');
       setResultNumber([]);
       userResults[0]?.filter(result => result.category === category.name && setResultNumber(prev => [...prev,result.result]));
   }, [userResults]);
 
   const sortResult = () => {
     resultNumber.sort((a,b) => b-a);
-    console.log(resultNumber, 'sortResult')
     return resultNumber[0];
   }
 

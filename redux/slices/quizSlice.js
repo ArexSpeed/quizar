@@ -6,10 +6,19 @@ export const fetchCategories = createAsyncThunk('quiz/categoriesApi', async () =
   return response.data
 });
 
-// export const fetchQuestions = createAsyncThunk('quiz/questionsApi', async () => {
-//   const response = await axios.get('http://localhost:3000/api/questions');
-//   return response.data
-// })
+// load localStorage to unlogged user
+export const loadState = () => {
+  try {
+    const serializedState = localStorage.getItem('points');
+    if (serializedState === null) {
+      return undefined;
+    }
+    return JSON.stringify(serializedState);
+  } catch (err) {
+    return undefined;
+  }
+}; 
+
 
 const initialState = {
   categories: [
@@ -34,134 +43,12 @@ const initialState = {
   ],
   selectedCategory: null,
   activeQuestion: 0,
-  result: 0,
-  questions: [
-    {
-      id: 1,
-      category: 'Maths',
-      content: '2+2 = ',
-      answers: [
-        { valid: false, checked: false, content: "3" },
-        { valid: false, checked: false, content: "8"},
-        { valid: true, checked: false, content: "4"},
-        { valid: false, checked: false, content: "5"},
-      ]
-    },
-    {
-      id: 2,
-      category: 'Maths',
-      content: '2+20 = ',
-      answers: [
-        { valid: false, checked: false, content: "3" },
-        { valid: true, checked: false, content: "22"},
-        { valid: false, checked: false, content: "4"},
-        { valid: false, checked: false, content: "5"},
-      ]
-    },
-    {
-      id: 3,
-      category: 'Maths',
-      content: '5*10 = ',
-      answers: [
-        { valid: true, checked: false, content: "50" },
-        { valid: false, checked: false, content: "80"},
-        { valid: false, checked: false, content: "40"},
-        { valid: false, checked: false, content: "5"},
-      ]
-    },
-    {
-      id: 4,
-      category: 'Programming',
-      content: 'One of framework is ',
-      answers: [
-        { valid: false, checked: false, content: "JavaScript" },
-        { valid: false, checked: false, content: "HTML"},
-        { valid: true, checked: false, content: "React"},
-        { valid: false, checked: false, content: "Python"},
-      ]
-    },
-    {
-      id: 5,
-      category: 'Programming',
-      content: 'What is not a programming language? ',
-      answers: [
-        { valid: false, checked: false, content: "C++" },
-        { valid: true, checked: false, content: "React"},
-        { valid: false, checked: false, content: "Python"},
-        { valid: false, checked: false, content: "Java"},
-      ]
-    },
-    {
-      id: 6,
-      category: 'Programming',
-      content: 'JavaScript launched at ',
-      answers: [
-        { valid: true, checked: false, content: "1995" },
-        { valid: false, checked: false, content: "2005"},
-        { valid: false, checked: false, content: "2001"},
-        { valid: false, checked: false, content: "1999"},
-      ]
-    },
-    {
-      id: 7,
-      category: 'Geography',
-      content: 'The biggest country in the World> ',
-      answers: [
-        { valid: false, checked: false, content: "USA" },
-        { valid: false, checked: false, content: "Canada"},
-        { valid: true, checked: false, content: "Russia"},
-        { valid: false, checked: false, content: "China"},
-      ]
-    },
-    {
-      id: 8,
-      category: 'Geography',
-      content: 'What is the capital of US? ',
-      answers: [
-        { valid: false, checked: false, content: "New York" },
-        { valid: true, checked: false, content: "Washington"},
-        { valid: false, checked: false, content: "LA"},
-        { valid: false, checked: false, content: "Chicago"},
-      ]
-    },
-    {
-      id: 9,
-      category: 'Geography',
-      content: 'How many states has USA ',
-      answers: [
-        { valid: true, checked: false, content: "50" },
-        { valid: false, checked: false, content: "60"},
-        { valid: false, checked: false, content: "40"},
-        { valid: false, checked: false, content: "30"},
-      ]
-    },
-    {
-      id: 10,
-      category: 'Geography',
-      content: 'What is capital of England ',
-      answers: [
-        { valid: true, checked: false, content: "London" },
-        { valid: false, checked: false, content: "Liverpool"},
-        { valid: false, checked: false, content: "Manchester"},
-        { valid: false, checked: false, content: "Leeds"},
-      ]
-    },
-    {
-      id: 11,
-      category: 'Geography',
-      content: 'How many desserts are in Europe ',
-      answers: [
-        { valid: true, checked: false, content: "1" },
-        { valid: false, checked: false, content: "0"},
-        { valid: false, checked: false, content: "10"},
-        { valid: false, checked: false, content: "30"},
-      ]
-    },
-  ],
   selectedQuestions: [],
   categoriesApi: [],
   questionsApi: [],
   userResults: [],
+  userResultsFromStorage: [],
+  storagePoint: loadState(),
 }
 
 export const slice = createSlice({
@@ -204,25 +91,22 @@ export const slice = createSlice({
       })
     },
     getQuestionsFromApi : (state, action) => {
-      console.log(action.payload, 'payload question');
       state.questionsApi = [];
       state.questionsApi.push(action.payload.data);
     },
     fetchUserResults : (state, action) => {
-      console.log(action.payload, 'payload question');
       state.userResults = [];
       state.userResults.push(action.payload.data);
+    },
+    saveToStorage: (state, action) => {
+      console.log(action.payload, 'saveToStorage')
+      localStorage.setItem('points', JSON.stringify(action.payload));
     }
   },
   extraReducers: {
     [fetchCategories.fulfilled]: (state, action) => {
       state.categoriesApi.push(action.payload);
-      //return action.payload
     },
-    // [fetchQuestions.fulfilled]: (state, action) => {
-    //   state.questionsApi.push(action.payload);
-    //   //return action.payload
-    // }
   }
 });
 
@@ -237,6 +121,7 @@ export const {
   finish,
   getQuestionsFromApi,
   fetchUserResults,
+  saveToStorage
 } = slice.actions;
 
 export const getQuizCategories = state => state.quiz.categories;
@@ -248,5 +133,7 @@ export const getSelectedQuestions = state => state.quiz.selectedQuestions;
 export const getQuizCategoriesApi = state => state.quiz.categoriesApi;
 export const getQuizQuestionsApi = state => state.quiz.questionsApi;
 export const getUserResults = state => state.quiz.userResults;
+//Select from localStorage
+export const getStoragePoint = state => state.quiz.storagePoint;
 
 export default slice.reducer;

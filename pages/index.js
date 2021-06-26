@@ -5,7 +5,7 @@ import { signOut, useSession } from 'next-auth/client';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser, setUser } from 'redux/slices/userSlice';
-import { getQuizCategoriesApi, filterQuestions, getQuizCategories, fetchUserResults, getUserResults } from 'redux/slices/quizSlice';
+import { getQuizCategoriesApi, filterQuestions, getQuizCategories, fetchUserResults, getUserResults, saveToStorage, getStoragePoint } from 'redux/slices/quizSlice';
 import axios from 'axios';
 import QuizBox from 'components/QuizBox';
 import Nav from 'components/Nav';
@@ -18,6 +18,7 @@ export default function Home() {
   const categories = useSelector(getQuizCategories);
   const categoriesApi = useSelector(getQuizCategoriesApi);
   const userResults = useSelector(getUserResults);
+  const storagePoint = useSelector(getStoragePoint);
 
   useEffect(async () => {
     if(session) {
@@ -43,7 +44,7 @@ export default function Home() {
     return uniqueCategory.length;
   }
 
-
+  console.log(storagePoint, 'storage')
   return (
     <>
       <Head>
@@ -82,7 +83,7 @@ export default function Home() {
           </div>
         </section>
         {/* Quiz section */}
-        {session && !loading && 
+
         <section className="flex flex-col justify-center items-start w-full mb-24">
           <h4 className="text-sm text-gray-400 uppercase my-4">Quizes</h4>
 
@@ -90,7 +91,7 @@ export default function Home() {
             <QuizBox key={category._id} category={category} />
           ))}
         </section>
-        }
+        
       </main>
       </div>
     </>

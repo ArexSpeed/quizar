@@ -1,14 +1,16 @@
 import { useState } from 'react';
 import Link from 'next/link';
+import { useSession } from 'next-auth/client';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from 'redux/slices/userSlice';
-import { next, reset, finish, getSelectedQuestions, getActiveQuestionNumber, getCurrentCategory, selectCategory, getQuizQuestionsApi } from 'redux/slices/quizSlice';
+import { next, reset, finish, getSelectedQuestions, getActiveQuestionNumber, getCurrentCategory, selectCategory, getQuizQuestionsApi, saveToStorage } from 'redux/slices/quizSlice';
 import styled, { keyframes } from "styled-components";
 import CountUp from 'react-countup';
 import Confetti from 'react-confetti'
 import axios from 'axios';
 
 const QuizPage = () => {
+  const [session] = useSession();
   const [answer, setAnswer] = useState({variant: '', correct: false});
   const [randomAnswer, setRandomAnswer] = useState([3,2,0,1]); //mix answers array 
   const [points, setPoints] = useState(0);
@@ -73,10 +75,17 @@ const QuizPage = () => {
       result
     }
     console.log(payload, 'payload in handleFInish');
-    await axios.post("http://localhost:3000/api/results", payload)
-    dispatch(finish({
-      name: category, 
-    }))
+    if(session){
+      await axios.post("http://localhost:3000/api/results", payload)
+      dispatch(finish({
+        name: category, 
+      }))
+    } else {
+      dispatch(saveToStorage({
+        category: payload.category,
+        result: payload.result
+      }))
+    }
 
     handleReset();
   }

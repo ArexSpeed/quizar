@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { getUserResults, getQuestionsFromApi, selectCategory } from 'redux/slices/quizSlice';
-import axios from 'axios';
-import Link from 'next/link';
+import { useSelector } from 'react-redux';
+import { getUserResults } from 'redux/slices/quizSlice';
 
 const QuizStats = ({ category }) => {
   const [categoryResults, setCategoryResults] = useState([])
