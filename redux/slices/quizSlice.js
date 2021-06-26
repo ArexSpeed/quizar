@@ -13,7 +13,7 @@ export const loadState = () => {
     if (serializedState === null) {
       return undefined;
     }
-    return JSON.stringify(serializedState);
+    return JSON.parse(serializedState);
   } catch (err) {
     return undefined;
   }
@@ -99,8 +99,11 @@ export const slice = createSlice({
       state.userResults.push(action.payload.data);
     },
     saveToStorage: (state, action) => {
-      console.log(action.payload, 'saveToStorage')
-      localStorage.setItem('points', JSON.stringify(action.payload));
+      console.log(action.payload, 'saveToStorage');
+      const newItem = state.storagePoint.length;
+      let items = state.storagePoint;
+      items[newItem] = action.payload; //create array from saving state and add new item to storage (normally localstorage is not saving arrays)
+      localStorage.setItem('points', JSON.stringify(items));
     }
   },
   extraReducers: {
