@@ -1,11 +1,9 @@
 import Head from 'next/head'
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { signOut, useSession } from 'next-auth/client';
+import { useSession } from 'next-auth/client';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getUser, setUser } from 'redux/slices/userSlice';
-import { getQuizCategoriesApi, filterQuestions, getQuizCategories, fetchUserResults, getUserResults, saveToStorage, getStorageResults } from 'redux/slices/quizSlice';
+import { setUser } from 'redux/slices/userSlice';
+import { getQuizCategoriesApi, fetchUserResults, getUserResults, getStorageResults } from 'redux/slices/quizSlice';
 import axios from 'axios';
 import QuizBox from 'components/QuizBox';
 import Nav from 'components/Nav';
@@ -13,9 +11,7 @@ import Header from 'components/Header';
 
 export default function Home() {
   const [session, loading] = useSession();
-  const [finishedQuiz, setFinishedQuiz] = useState(0);
   const dispatch = useDispatch();
-  const categories = useSelector(getQuizCategories);
   const categoriesApi = useSelector(getQuizCategoriesApi);
   const userResults = useSelector(getUserResults);
   const storageResults = useSelector(getStorageResults);
@@ -27,11 +23,6 @@ export default function Home() {
       dispatch(fetchUserResults(data));
     }
   }, [session])
-
-  useEffect(() => {
-    setFinishedQuiz(0);
-    categories.filter(category => category.finished && setFinishedQuiz(finishedQuiz+1));
-  }, [categories])
 
 
   //Avg score calculate

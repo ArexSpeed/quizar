@@ -22,7 +22,6 @@ const Login = () => {
     setError(null);
     setFormProcessing(true);
     const form = new FormData(loginForm.current);
-    console.log(form.get('email'), 'form');
     const { ok } = await signIn('credentials', {
       redirect: false,
       email: form.get('email'),

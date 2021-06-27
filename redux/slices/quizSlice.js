@@ -21,26 +21,6 @@ export const loadState = () => {
 
 
 const initialState = {
-  categories: [
-    {
-      id: 1,
-      name: 'Maths',
-      finished: false,
-      result: 0
-    },
-    {
-      id: 2,
-      name: 'Programming',
-      finished: false,
-      result: 0
-    },
-    {
-      id: 3,
-      name: 'Geography',
-      finished: false,
-      result: 0
-    },
-  ],
   selectedCategory: null,
   activeQuestion: 0,
   selectedQuestions: [],
@@ -75,21 +55,6 @@ export const slice = createSlice({
       const question = state.questions[state.activeQuestion]
       question.answers[answer].checked = !question.answers[answer].checked
     },
-    filterQuestions: (state, action) => {
-      state.selectedQuestions = state.questions.filter(question => question.category === action.payload);
-      state.selectedCategory = action.payload;
-    },
-    finish: (state, action) => {
-      console.log(action.payload);
-      const categoryName = action.payload.name;
-      const result = action.payload.result;
-      state.categories.map(category => {
-        if(category.name === categoryName) {
-          category.result = result;
-          category.finished = true;
-        }
-      })
-    },
     getQuestionsFromApi : (state, action) => {
       state.questionsApi = [];
       state.questionsApi.push(action.payload.data);
@@ -120,15 +85,11 @@ export const {
   prev,
   reset,
   toggleAnswer,
-  filterQuestions,
-  finish,
   getQuestionsFromApi,
   fetchUserResults,
   saveToStorage
 } = slice.actions;
 
-export const getQuizCategories = state => state.quiz.categories;
-export const getQuizQuestions = state => state.quiz.questions;
 export const getActiveQuestionNumber = state => state.quiz.activeQuestion;
 export const getCurrentCategory = state => state.quiz.selectedCategory;
 export const getSelectedQuestions = state => state.quiz.selectedQuestions;

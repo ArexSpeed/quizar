@@ -35,7 +35,6 @@ const QuizBox = ({ category, session }) => {
 
   return (
     <div className="w-full h-20 my-2 flex flex-row justify-between items-center bg-green-100 rounded-md">
-      {console.log('render')}
       <div className="px-2 mx-2 w-8 h-8 rounded-full flex justify-center items-center bg-green-200">
         <svg
           className="w-6 h-6"

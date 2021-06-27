@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { useSession } from 'next-auth/client';
 import { useDispatch, useSelector } from 'react-redux';
 import { getUser } from 'redux/slices/userSlice';
-import { next, reset, finish, getSelectedQuestions, getActiveQuestionNumber, getCurrentCategory, selectCategory, getQuizQuestionsApi, saveToStorage } from 'redux/slices/quizSlice';
+import { next, reset, getActiveQuestionNumber, getCurrentCategory, getQuizQuestionsApi, saveToStorage } from 'redux/slices/quizSlice';
 import styled, { keyframes } from "styled-components";
 import CountUp from 'react-countup';
 import Confetti from 'react-confetti'
@@ -15,7 +15,6 @@ const QuizPage = () => {
   const [randomAnswer, setRandomAnswer] = useState([3,2,0,1]); //mix answers array 
   const [points, setPoints] = useState(0);
   const [summary, setSummary] = useState(false);
-  //const questions = useSelector(getSelectedQuestions);
   const questionsApi = useSelector(getQuizQuestionsApi);
   const questionNumber = useSelector(getActiveQuestionNumber);
   const category = useSelector(getCurrentCategory);
@@ -78,9 +77,6 @@ const QuizPage = () => {
     console.log(payload, 'payload in handleFInish');
     if(session){
       await axios.post("http://localhost:3000/api/results", payload)
-      dispatch(finish({
-        name: category, 
-      }))
     } else {
       dispatch(saveToStorage({
         category: payload.category,

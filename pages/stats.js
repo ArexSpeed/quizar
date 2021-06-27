@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/client';
 import { useDispatch, useSelector } from 'react-redux';
-import { getQuizCategoriesApi, getQuizCategories, fetchUserResults, getUserResults, getStorageResults } from 'redux/slices/quizSlice';
+import { getQuizCategoriesApi, fetchUserResults, getUserResults, getStorageResults } from 'redux/slices/quizSlice';
 import axios from 'axios';
 import Nav from 'components/Nav';
 import Header from 'components/Header';
@@ -9,9 +9,7 @@ import QuizStats from 'components/QuizStats';
 
 const StatsPage = () => {
   const [session] = useSession();
-  const [finishedQuiz, setFinishedQuiz] = useState(0);
   const dispatch = useDispatch();
-  const categories = useSelector(getQuizCategories);
   const categoriesApi = useSelector(getQuizCategoriesApi);
   const userResults = useSelector(getUserResults);
   const storageResults = useSelector(getStorageResults);
@@ -22,11 +20,6 @@ const StatsPage = () => {
       dispatch(fetchUserResults(data));
     }
   }, [session])
-
-  useEffect(() => {
-    setFinishedQuiz(0);
-    categories.filter(category => category.finished && setFinishedQuiz(finishedQuiz+1));
-  }, [categories])
 
 
    //Avg score calculate
