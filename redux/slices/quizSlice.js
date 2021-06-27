@@ -48,7 +48,7 @@ const initialState = {
   questionsApi: [],
   userResults: [],
   userResultsFromStorage: [],
-  storagePoint: loadState(),
+  storageResults: loadState(),
 }
 
 export const slice = createSlice({
@@ -100,8 +100,8 @@ export const slice = createSlice({
     },
     saveToStorage: (state, action) => {
       console.log(action.payload, 'saveToStorage');
-      const newItem = state.storagePoint.length;
-      let items = state.storagePoint;
+      const newItem = state.storageResults.length;
+      let items = state.storageResults;
       items[newItem] = action.payload; //create array from saving state and add new item to storage (normally localstorage is not saving arrays)
       localStorage.setItem('points', JSON.stringify(items));
     }
@@ -137,6 +137,6 @@ export const getQuizCategoriesApi = state => state.quiz.categoriesApi;
 export const getQuizQuestionsApi = state => state.quiz.questionsApi;
 export const getUserResults = state => state.quiz.userResults;
 //Select from localStorage
-export const getStoragePoint = state => state.quiz.storagePoint;
+export const getStorageResults = state => state.quiz.storageResults;
 
 export default slice.reducer;

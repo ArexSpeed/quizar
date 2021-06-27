@@ -1,19 +1,24 @@
 import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getUserResults, getQuestionsFromApi, selectCategory } from 'redux/slices/quizSlice';
+import { getUserResults, getQuestionsFromApi, selectCategory, getStorageResults } from 'redux/slices/quizSlice';
 import axios from 'axios';
 import Link from 'next/link';
 
 
-const QuizBox = ({ category }) => {
+const QuizBox = ({ category, session }) => {
   const [resultNumber, setResultNumber] = useState([]);
   const userResults = useSelector(getUserResults);
+  const storageResults = useSelector(getStorageResults);
 
   const dispatch = useDispatch();
   useEffect(() => {
       setResultNumber([]);
-      userResults[0]?.filter(result => result.category === category.name && setResultNumber(prev => [...prev,result.result]));
-  }, [userResults]);
+      if(session){
+        userResults[0]?.filter(result => result.category === category.name && setResultNumber(prev => [...prev,result.result]));
+      } else {
+        storageResults?.filter(result => result.category === category.name && setResultNumber(prev => [...prev,result.result]));
+      }
+  }, [userResults, storageResults]);
 
   const sortResult = () => {
     resultNumber.sort((a,b) => b-a);
