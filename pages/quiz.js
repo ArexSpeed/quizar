@@ -72,7 +72,8 @@ const QuizPage = () => {
     let payload = {
       user: user.username,
       category: category,
-      result
+      result,
+      date: new Date().toISOString()
     }
     console.log(payload, 'payload in handleFInish');
     if(session){
@@ -83,7 +84,8 @@ const QuizPage = () => {
     } else {
       dispatch(saveToStorage({
         category: payload.category,
-        result: payload.result
+        result: payload.result,
+        date: payload.date
       }))
     }
 

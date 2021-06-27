@@ -9,7 +9,6 @@ const QuizStats = ({ category, session }) => {
 
   useEffect(() => {
       setCategoryResults([]);
-      userResults[0]?.filter(result => result.category === category.name && setCategoryResults(prev => [...prev,result]));
       if(session){
         userResults[0]?.filter(result => result.category === category.name && setCategoryResults(prev => [...prev,result]));
       } else {
@@ -20,7 +19,7 @@ const QuizStats = ({ category, session }) => {
   const showCategoryResults = categoryResults.map((result, i) => (
     <tr key={i} className="border-b border-gray-200 hover:bg-gray-100">
       <td className="py-3 px-3 text-left whitespace-nowrap ">{i+1}</td>
-      <td>25.06.2020</td>
+      <td>{result.date ? result.date.substr(0,10) : 'No data'}</td>
       <td className={`${result.result < 26 ? 'text-red-400' : result.result < 51 ? 'text-yellow-200' : result.result < 76 ? 'text-blue-400' : result.result >= 76 ? 'text-green-400' : 'text-gray-600'}`}>{result.result}</td>
     </tr>
   ))
@@ -32,7 +31,7 @@ const QuizStats = ({ category, session }) => {
       </tr>
       <tr className="bg-gray-200 text-gray-400 uppercase text-sm leading-normal">
         <td>Try</td>
-        <td>Data</td>
+        <td>Date</td>
         <td>Score</td>
       </tr>
       <tbody className="text-gray-600 bg-white text-sm font-light rounded-b">
