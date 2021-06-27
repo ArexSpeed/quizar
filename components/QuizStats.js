@@ -1,17 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { getUserResults } from 'redux/slices/quizSlice';
+import { getUserResults, getStorageResults } from 'redux/slices/quizSlice';
 
-const QuizStats = ({ category }) => {
+const QuizStats = ({ category, session }) => {
   const [categoryResults, setCategoryResults] = useState([])
   const userResults = useSelector(getUserResults);
-  console.log(userResults, 'results in stats');
+  const storageResults = useSelector(getStorageResults);
+
   useEffect(() => {
-    console.log('useEffect');
       setCategoryResults([]);
       userResults[0]?.filter(result => result.category === category.name && setCategoryResults(prev => [...prev,result]));
-  }, [userResults]);
-  console.log(categoryResults, 'cagtegory Results');
+      if(session){
+        userResults[0]?.filter(result => result.category === category.name && setCategoryResults(prev => [...prev,result]));
+      } else {
+        storageResults?.filter(result => result.category === category.name && setCategoryResults(prev => [...prev,result]));
+      }
+  }, [userResults, storageResults]);
 
   const showCategoryResults = categoryResults.map((result, i) => (
     <tr key={i} className="border-b border-gray-200 hover:bg-gray-100">

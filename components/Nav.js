@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import { useSession } from 'next-auth/client';
 import Link from 'next/link';
 
 const Nav = () => {
+  const [session] = useSession();
   const [activeNav, setActiveNav] = useState('');
   const router = useRouter();
   const path = router.pathname;
@@ -32,7 +34,8 @@ const Nav = () => {
             <h5 className={`${(activeNav || path) === '/stats' ? 'block' : 'hidden'} text-purple-500 font-semibold`}>Stats</h5>
           </li>
         </Link>
-        <Link href="/profile">
+        {session ? (
+          <Link href="/profile">
           <li 
             className="relative w-full h-20 flex flex-col justify-center items-center cursor-pointer"
             onMouseEnter={() => setActiveNav('/profile')}
@@ -42,7 +45,21 @@ const Nav = () => {
             <svg className={`w-6 h-6 text-gray-700 ${(activeNav || path) === '/profile' && 'text-purple-500'}`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" /></svg>
             <h5 className={`${(activeNav || path) === '/profile' ? 'block' : 'hidden'} text-purple-500 font-semibold`}>Profile</h5>
           </li>
-        </Link>
+          </Link>
+        ) : (
+          <Link href="/login">
+            <li 
+              className="relative w-full h-20 flex flex-col justify-center items-center cursor-pointer"
+              onMouseEnter={() => setActiveNav('/profile')}
+              onTouchMoveCapture={() => setActiveNav('/profile')}
+              onMouseLeave={() => setActiveNav('')}
+            >
+              <svg className={`w-6 h-6 text-gray-700 ${(activeNav || path) === '/profile' && 'text-purple-500'}`} fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd" /></svg>
+              <h5 className={`${(activeNav || path) === '/profile' ? 'block' : 'hidden'} text-purple-500 font-semibold`}>Login</h5>
+            </li>
+          </Link>
+        )}
+        
       </ul>
     </nav>
     </div>

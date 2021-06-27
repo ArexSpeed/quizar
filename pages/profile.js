@@ -131,6 +131,7 @@ const Profile = () => {
     ):
     (
       <div className="relative flex flex-col items-center justify-start h-screen w-full mx-auto md:max-w-screen-md p-2 bg-gray-100 overflow-x-hidden overflow-y-auto">
+      Please log in
       </div>
     )
   )
