@@ -76,7 +76,13 @@ const QuizPage = () => {
     }
     console.log(payload, 'payload in handleFInish');
     if(session){
-      await axios.post("http://localhost:3000/api/results", payload)
+      await fetch(`/api/results`, {
+        method: 'POST',
+        body: JSON.stringify(payload),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
     } else {
       dispatch(saveToStorage({
         category: payload.category,

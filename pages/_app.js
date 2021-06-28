@@ -3,7 +3,7 @@ import 'styles/globals.css';
 import { Provider as SessionProvider } from 'next-auth/client';
 import { Provider } from 'react-redux';
 import store from 'redux/store';
-import { fetchCategories, fetchUserResults } from 'redux/slices/quizSlice';
+import { fetchCategories } from 'redux/slices/quizSlice';
 
 store.dispatch(fetchCategories());
 

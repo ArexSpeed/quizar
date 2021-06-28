@@ -3,9 +3,8 @@ import create from 'services/users/create';
 import { ObjectID } from 'mongodb';
 
 export default async (req, res) => {
-  const { client, db } = await connectToDatabase();
-  // const isConnected = await client.isConnected();
-  // console.log(isConnected, 'connect');
+  const { db } = await connectToDatabase();
+
   switch (req.method) {
     case 'GET': {
       const data = await db.collection("users").find({"user": query.user}).sort({_id: 1}).toArray();

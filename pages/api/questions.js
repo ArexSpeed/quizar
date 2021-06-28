@@ -14,7 +14,6 @@ export default async (req, res) => {
     case 'POST': {
       try {
         const payload = req.body;
-        //console.log(payload, 'body')
         const question = await db.collection('questions').insertOne(
           {
             category: payload.category,

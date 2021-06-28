@@ -16,7 +16,7 @@ const StatsPage = () => {
 
   useEffect(async () => {
     if(session) {
-      const data = await axios.get(`http://localhost:3000/api/results?user=${session.user.name}`)
+      const data = await axios.get(`/api/results?user=${session.user.name}`)
       dispatch(fetchUserResults(data));
     }
   }, [session])

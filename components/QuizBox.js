@@ -26,7 +26,8 @@ const QuizBox = ({ category, session }) => {
   }
 
   const chooseQuiz = async (category) => {
-    const data = await axios.get(`http://localhost:3000/api/questions?category=${category}`);
+   const data = await axios.get(`/api/questions?category=${category}`);
+
     dispatch(selectCategory(category));
     dispatch(getQuestionsFromApi(data));
   }
