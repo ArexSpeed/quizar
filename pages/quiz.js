@@ -6,8 +6,7 @@ import { getUser } from 'redux/slices/userSlice';
 import { next, reset, getActiveQuestionNumber, getCurrentCategory, getQuizQuestionsApi, saveToStorage } from 'redux/slices/quizSlice';
 import styled, { keyframes } from "styled-components";
 import CountUp from 'react-countup';
-import Confetti from 'react-confetti'
-import axios from 'axios';
+import Confetti from 'react-confetti';
 
 const QuizPage = () => {
   const [session] = useSession();
@@ -108,6 +107,19 @@ const QuizPage = () => {
     width: 0%;
     animation: ${range} 2s linear forwards;
   `;
+
+  if(!questions) {
+    return (
+      <div className="relative flex flex-col items-center justify-start h-screen w-full mx-auto md:max-w-screen-md p-2 bg-gray-100 overflow-x-hidden overflow-y-auto">
+        <p>Questions not loaded</p>
+        <Link href="/">
+          <button>
+            Back
+          </button>
+        </Link>
+      </div>
+    )
+  }
 
   return (
     <div className="relative flex flex-col items-center justify-start h-screen w-full mx-auto md:max-w-screen-md p-2 bg-gray-100 overflow-x-hidden overflow-y-auto"> 

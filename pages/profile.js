@@ -1,20 +1,17 @@
 import { useState, useRef } from 'react'
-import { useSelector } from 'react-redux';
-import { getUser } from 'redux/slices/userSlice';
 import { useSession } from 'next-auth/client';
 import uploadImage from 'util/uploadImage';
 import Nav from 'components/Nav';
 import Header from 'components/Header';
 
 const Profile = () => {
-  const user = useSelector(getUser);
-  const [session, loading] = useSession();
+  const [session] = useSession();
   const editForm = useRef();
   const [error, setError] = useState();
   const [info, setInfo] = useState();
   const [changePassword, setChangePassword] = useState(false);
   const [formProcessing, setFormProcessing] = useState(false);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState(session.user.image);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState(session?.user?.image);
 
   const handleImagePreview = (e) => {
     console.log('handleImagPreview');
@@ -78,7 +75,6 @@ const Profile = () => {
 
   }
   return (
-    session ? (
     <div className="relative flex flex-col items-center justify-start h-screen w-full mx-auto md:max-w-screen-md p-2 bg-gray-100 overflow-x-hidden overflow-y-auto">
       <Nav />
       <Header />
@@ -92,16 +88,16 @@ const Profile = () => {
               </div>
             ) : (
               <div className="w-22 h-22 rounded-full bg-blue-400 flex justify-center items-center">
-                <span className="text-5xl text-blue-700">{session.user.name.substr(0,1).toUpperCase()}</span>
+                <span className="text-5xl text-blue-700">{session?.user.name.substr(0,1).toUpperCase()}</span>
               </div>
             )}
           
             <input type="file" id="image" name="image" onChange={handleImagePreview} />
           <div className="w-full h-16 my-2 flex flex-row justify-start items-center bg-white shadow-md rounded-md">
-            <input className="px-2 text-xl w-full h-full" type="name" id="name" name="name" placeholder="Name" defaultValue={session.user.name} required />
+            <input className="px-2 text-xl w-full h-full" type="name" id="name" name="name" placeholder="Name" defaultValue={session?.user.name} required />
           </div>
           <div className="w-full h-16 my-2 flex flex-row justify-start items-center bg-white shadow-md rounded-md">
-            <input className="px-2 text-xl w-full h-full" type="email" id="email" name="email" placeholder="Email" defaultValue={session.user.email} required />
+            <input className="px-2 text-xl w-full h-full" type="email" id="email" name="email" placeholder="Email" defaultValue={session?.user.email} required />
           </div>
           <div>
             <button type="button" className="flex flex-row" onClick={() => setChangePassword(!changePassword)}>
@@ -128,12 +124,7 @@ const Profile = () => {
       </main>
 
     </div>
-    ):
-    (
-      <div className="relative flex flex-col items-center justify-start h-screen w-full mx-auto md:max-w-screen-md p-2 bg-gray-100 overflow-x-hidden overflow-y-auto">
-      Please log in
-      </div>
-    )
+
   )
 }
 
